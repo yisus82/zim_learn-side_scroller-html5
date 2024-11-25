@@ -1,5 +1,7 @@
 const ready = () => {
-  new Circle(100, purple).center().drag();
+  const physics = new Physics().drag();
+
+  const olive = new Circle().center().addPhysics();
 };
 
 new Frame({
