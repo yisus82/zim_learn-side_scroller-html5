@@ -1,5 +1,26 @@
 const ready = () => {
-  new Physics().drag();
+  // We make a pattern for the background using the makePattern function from Pizzazz
+  const background = makePattern({
+    type: 'stripes',
+    colors: series(blue, blue.lighten(0.2)),
+    size: 50,
+    rows: 35,
+    cols: 200,
+  })
+    .alp(0.4)
+    .pos(0, 0)
+    .noMouse();
+
+  new Physics({
+    gravity: 10,
+    borders: new Boundary({
+      x: 0,
+      y: 0,
+      width: background.width,
+      height: H,
+    }),
+    scroll: true,
+  });
 
   // Tree
   // Trunk
@@ -8,7 +29,7 @@ const ready = () => {
     height: 500,
     color: brown,
   })
-    // Center the reg of physics objects (circles default center)
+    // Center the registration point (default for rectangles is top-left)
     .centerReg()
     .pos(0, 0, LEFT, BOTTOM)
     .addPhysics({
@@ -39,6 +60,7 @@ const ready = () => {
       dynamic: false,
     });
 
+  // Olive
   const olive = new Circle({
     radius: 60,
     color: new RadialColor([green.darken(0.3), 'olive']),
@@ -46,6 +68,10 @@ const ready = () => {
     .loc(160, 290)
     .addPhysics({
       density: 0.6,
+    })
+    // Move only horizontally
+    .follow({
+      vertical: false,
     });
   new Circle({
     radius: 20,
@@ -54,6 +80,23 @@ const ready = () => {
     .alp(0.6)
     .center(olive)
     .mov(25);
+
+  // Start message
+  new Pane({
+    content: new Label({
+      text: "Gentlemen are Enjoying a Day in the Park.  Oh, it's a Lost Olive!",
+      color: yellow,
+      size: 30,
+      variant: true,
+    }).noMouse(),
+    backgroundColor: black,
+    width: W,
+    corner: 0,
+  }).show(() => {
+    olive.control({
+      speed: 50,
+    });
+  });
 };
 
 new Frame({
