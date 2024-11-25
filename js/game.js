@@ -84,7 +84,7 @@ const ready = () => {
   // Start message
   new Pane({
     content: new Label({
-      text: "Gentlemen are Enjoying a Day in the Park.  Oh, it's a Lost Olive!",
+      text: "Gentlemen are Enjoying a Day in the Park. Oh, it's a Lost Olive!",
       color: yellow,
       size: 30,
       variant: true,
@@ -97,8 +97,31 @@ const ready = () => {
       speed: 50,
     });
   });
+
+  // Hat
+  const hatPoints = [
+    [-100, -100, 0, 0, 0, 0, 0, 0, 'none'],
+    [-50.2, -107.1, 0, 0, -25, 1.4, 13.6, -0.8, 'mirror'],
+    [3.5, -109.1, 0, 0, -21, -0.1, 17.5, 0.1, 'mirror'],
+    [58.3, -105, 0, 0, -11, -1.3, 24.3, 2.9, 'mirror'],
+    [100, -100, 0, 0, 0, 0, 0, 0, 'none'],
+    [67.8, 100, 0, 0, 0, 0, 0, 0, 'none'],
+    [-72.8, 100, 0, 0, 0, 0, 0, 0, 'none'],
+  ];
+  new Blob({
+    color: black,
+    points: hatPoints,
+    interactive: false,
+  })
+    .reg(CENTER)
+    .sca(2)
+    .pos(100, -200, CENTER, BOTTOM)
+    .addPhysics({
+      dynamic: false,
+    });
 };
 
+// Create a new frame
 new Frame({
   scaling: FIT,
   width: 1024,
