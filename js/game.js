@@ -98,7 +98,7 @@ const ready = () => {
     });
   });
 
-  // Hat
+  // Hats
   const hatPoints = [
     [-100, -100, 0, 0, 0, 0, 0, 0, 'none'],
     [-50.2, -107.1, 0, 0, -25, 1.4, 13.6, -0.8, 'mirror'],
@@ -108,17 +108,23 @@ const ready = () => {
     [67.8, 100, 0, 0, 0, 0, 0, 0, 'none'],
     [-72.8, 100, 0, 0, 0, 0, 0, 0, 'none'],
   ];
-  new Blob({
+  const hat = new Blob({
     color: black,
     points: hatPoints,
     interactive: false,
   })
     .reg(CENTER)
-    .sca(2)
-    .pos(100, -200, CENTER, BOTTOM)
-    .addPhysics({
-      dynamic: false,
-    });
+    .sca(2);
+  const hats = new Tile({
+    obj: hat,
+    cols: 10,
+    rows: 1,
+    spacingH: 400,
+  }).pos(600, -300, LEFT, BOTTOM);
+  hats.loop(hat => {
+    hat.addTo(S).addPhysics(false);
+    // with true it loops backwards which we will need when removing from container
+  }, true);
 
   // Jump
   olive.contact(obj => {
