@@ -11,13 +11,14 @@ const ready = () => {
     .pos(0, 0)
     .noMouse();
 
-  new Physics({
+  // Enable physics
+  const physics = new Physics({
     gravity: 10,
     borders: new Boundary({
       x: 0,
       y: 0,
       width: background.width,
-      height: H,
+      height: H * 2,
     }),
     scroll: true,
   });
@@ -93,22 +94,57 @@ const ready = () => {
     width: W,
     corner: 0,
   }).show(() => {
+    // Keyboard events
+    const keyDownEvent = F.on('keydown', event => {
+      if (olive.ground && (event.key === 'ArrowUp' || event.key === 'w' || event.key === ' ')) {
+        olive.ground = false;
+        olive.impulse(0, -100);
+      }
+    });
+
+    // Ticker
+    const ticker = Ticker.add(() => {
+      loop(hats.items, hat => {
+        hat.body.loc(hat.wiggler.x, hat.wiggler.y).rot(hat.wiggler.rotation);
+      });
+    });
+
     // Jump
     olive.contact(obj => {
+      // Check if the olive is on the bottom of the screen
+      if (obj.side == 'bottom') {
+        // Stop the keydown event
+        F.off('keydown', keyDownEvent);
+        // Stop mapping to the wigglers
+        Ticker.remove(ticker);
+        // End physics calculations
+        physics.dispose();
+        // Set the stage x back to 0
+        S.x = 0;
+        // Show the end message
+        new Pane({
+          content: new Label({
+            text: 'Oh Dear, the Day has Gone Dark',
+            color: yellow,
+            size: 30,
+            variant: true,
+          }).noMouse(),
+          backgroundColor: black,
+          width: W,
+          corner: 0,
+        }).show(() => {
+          location.reload();
+        });
+        return;
+      }
+
+      // Set the ground flag to true so that the olive can jump
       olive.ground = true;
     });
 
     // Olive's speed control
     olive.control({
       speed: 50,
-    });
-
-    // Keyboard events
-    F.on('keydown', event => {
-      if (olive.ground && (event.key === 'ArrowUp' || event.key === 'w' || event.key === ' ')) {
-        olive.ground = false;
-        olive.impulse(0, -100);
-      }
     });
 
     // Start the animation
@@ -156,13 +192,6 @@ const ready = () => {
   olive.body.SetSleepingAllowed(false);
   // Pause the hats' animation until the start message is closed
   pauseAnimate();
-
-  // Ticker
-  Ticker.add(() => {
-    loop(hats.items, hat => {
-      hat.body.loc(hat.wiggler.x, hat.wiggler.y).rot(hat.wiggler.rotation);
-    });
-  });
 };
 
 // Create a new frame
