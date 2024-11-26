@@ -119,6 +119,19 @@ const ready = () => {
     .addPhysics({
       dynamic: false,
     });
+
+  // Jump
+  olive.contact(obj => {
+    olive.ground = true;
+  });
+
+  // Keyboard events
+  F.on('keydown', event => {
+    if (olive.ground && (event.key === 'ArrowUp' || event.key === 'w' || event.key === ' ')) {
+      olive.ground = false;
+      olive.impulse(0, -100);
+    }
+  });
 };
 
 // Create a new frame
