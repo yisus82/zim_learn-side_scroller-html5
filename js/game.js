@@ -96,6 +96,7 @@ const ready = () => {
     olive.control({
       speed: 50,
     });
+    pauseAnimate(false);
   });
 
   // Hats
@@ -122,9 +123,23 @@ const ready = () => {
     spacingH: 400,
   }).pos(600, -300, LEFT, BOTTOM);
   hats.loop(hat => {
-    hat.addTo(S).addPhysics(false);
-    // with true it loops backwards which we will need when removing from container
+    hat.addTo(S).addPhysics({
+      dynamic: false,
+    });
+    hat.wiggler = new Rectangle()
+      .reg(CENTER)
+      .loc(hat)
+      // With null it starts at current x
+      .wiggle('x', null, 400, 600, 6, 12)
+      // With null it starts at current y
+      .wiggle('y', null, 10, 50, 0.5, 2)
+      .wiggle('rotation', 0, 5, 10, 2, 10);
   }, true);
+
+  // Disallow sleeping otherwise animated objects may pass through
+  olive.body.SetSleepingAllowed(false);
+  // Pause the hats' animation until the start message is closed
+  pauseAnimate();
 
   // Jump
   olive.contact(obj => {
@@ -137,6 +152,13 @@ const ready = () => {
       olive.ground = false;
       olive.impulse(0, -100);
     }
+  });
+
+  // Ticker
+  Ticker.add(() => {
+    loop(hats.items, hat => {
+      hat.body.loc(hat.wiggler.x, hat.wiggler.y).rot(hat.wiggler.rotation);
+    });
   });
 };
 
