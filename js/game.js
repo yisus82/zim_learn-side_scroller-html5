@@ -93,9 +93,25 @@ const ready = () => {
     width: W,
     corner: 0,
   }).show(() => {
+    // Jump
+    olive.contact(obj => {
+      olive.ground = true;
+    });
+
+    // Olive's speed control
     olive.control({
       speed: 50,
     });
+
+    // Keyboard events
+    F.on('keydown', event => {
+      if (olive.ground && (event.key === 'ArrowUp' || event.key === 'w' || event.key === ' ')) {
+        olive.ground = false;
+        olive.impulse(0, -100);
+      }
+    });
+
+    // Start the animation
     pauseAnimate(false);
   });
 
@@ -140,19 +156,6 @@ const ready = () => {
   olive.body.SetSleepingAllowed(false);
   // Pause the hats' animation until the start message is closed
   pauseAnimate();
-
-  // Jump
-  olive.contact(obj => {
-    olive.ground = true;
-  });
-
-  // Keyboard events
-  F.on('keydown', event => {
-    if (olive.ground && (event.key === 'ArrowUp' || event.key === 'w' || event.key === ' ')) {
-      olive.ground = false;
-      olive.impulse(0, -100);
-    }
-  });
 
   // Ticker
   Ticker.add(() => {
