@@ -130,6 +130,7 @@ const ready = () => {
             variant: true,
           }).noMouse(),
           backgroundColor: black,
+          height: H,
           width: W,
           corner: 0,
         }).show(() => {
